@@ -34,9 +34,8 @@ module.exports = function( path ){
       }
       return typeof content === "undefined"
         ? createError(`content is undeined`)
-        : write(path, content).then( d => {
-          return getState( path );
-        })
+        : write(path, content)
+          .then( d => getState( path ))
     }
     read( name ){
       if( typeof name == "undefined" ){
@@ -54,10 +53,12 @@ module.exports = function( path ){
         })
     }
     remove(){
-      remove( this.path );
+      return remove( this.path );
     }
     mkdir( name ){
-      mkdir( pathLib.resolve( this.path, `./${name}`))
+      let path = pathLib.resolve( this.path, `./${name}`)
+      return mkdir( path )
+        .then( d => getState( path ))
     }
     children( callback ){
       let rs = [];
